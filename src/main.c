@@ -6,6 +6,7 @@
 #include <ccore/event.h>
 #include <ccore/file.h>
 #include <ccore/string.h>
+#include <ccore/error.h>
 
 #include "tga.h"
 
@@ -97,14 +98,21 @@ int main(int argc, char** argv)
 {
     bool loop;
     ccEvent event;
+	ccError error;
 	GLuint program, vao, vbo, tex;
 	GLint imageLocation, mouseLocation;
 
     loop = true;
 
-    ccDisplayInitialize();
-    ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "A ccore window", 0);
-	ccGLBindContext(3, 2);
+	if(ccDisplayInitialize()){
+		goto cc_error;
+	}
+	if(ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "A ccore window", 0)){
+		goto cc_error;
+	}
+	if(ccGLBindContext(3, 2)){
+		goto cc_error;
+	}
 
 	printf("OpenGL version: %s\n", glGetString(GL_VERSION));
 	printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -147,10 +155,21 @@ int main(int argc, char** argv)
 
 		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 800, 600, 0);
 
-		ccGLSwapBuffers();
+		if(ccGLSwapBuffers()){
+			goto cc_error;
+		}
     }
 
     ccFreeAll();
 
     return 0;
+
+cc_error:
+	while((error = ccErrorPop())){
+		printf("Error: %s", ccErrorString(error));
+	}
+
+	ccFreeAll();
+
+	return -1;
 }
