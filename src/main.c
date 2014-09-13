@@ -67,7 +67,7 @@ GLuint loadProgram()
 	return program;
 }
 
-void loadTriangle(GLuint *vao, GLuint *vbo)
+void loadScreenTriangles(GLuint *vao, GLuint *vbo)
 {
 	GLfloat vertices[] = {
 		-1,-1, 0,
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 	mouseLocation = glGetUniformLocation(program, "mouse");
 	glUseProgram(program);
 
-	loadTriangle(&vao, &vbo);
+	loadScreenTriangles(&vao, &vbo);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tex);
