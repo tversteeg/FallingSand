@@ -31,7 +31,7 @@ GLuint loadShader(char *file, GLenum type)
 	buf[fi.size] = '\0';
 
 	shader = glCreateShader(type);
-	glShaderSource(shader, 1, &buf, NULL);
+	glShaderSource(shader, 1, (const char**)&buf, NULL);
 	glCompileShader(shader);
 
 	free(buf);
@@ -72,12 +72,12 @@ void loadScreenTriangles(GLuint *vao, GLuint *vbo)
 {
 	GLfloat vertices[] = {
 		-1,-1, 0,
-		 1,-1, 0,
+		1,-1, 0,
 		-1, 1, 0,
-		 1,-1, 0,
+		1,-1, 0,
 		-1, 1, 0,
-		 1, 1, 0,
-    };
+		1, 1, 0,
+	};
 
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(*vao);
@@ -88,21 +88,21 @@ void loadScreenTriangles(GLuint *vao, GLuint *vbo)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 int main(int argc, char** argv)
 {
-    bool loop;
-    ccEvent event;
+	bool loop;
+	ccEvent event;
 	ccError error;
 	GLuint program, vao, vbo, tex;
 	GLint imageLocation, mouseLocation;
 
-    loop = true;
+	loop = true;
 
 	if(ccDisplayInitialize()){
 		goto cc_error;
@@ -132,17 +132,17 @@ int main(int argc, char** argv)
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glProgramUniform1i(program, imageLocation, 0);
 
-    while(loop){
-        while(ccWindowPollEvent()){
-            event = ccWindowGetEvent();
-            switch(event.type){
-                case CC_EVENT_WINDOW_QUIT:
-                    loop = false;
-                    break;
+	while(loop){
+		while(ccWindowPollEvent()){
+			event = ccWindowGetEvent();
+			switch(event.type){
+				case CC_EVENT_WINDOW_QUIT:
+					loop = false;
+					break;
 				default:
 					break;
-            }
-        }
+			}
+		}
 
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -158,11 +158,11 @@ int main(int argc, char** argv)
 		if(ccGLSwapBuffers()){
 			goto cc_error;
 		}
-    }
+	}
 
-    ccFreeAll();
+	ccFreeAll();
 
-    return 0;
+	return 0;
 
 cc_error:
 	while((error = ccErrorPop())){
