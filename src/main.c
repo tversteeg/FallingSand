@@ -96,18 +96,19 @@ void loadScreenTriangles(GLuint *vao, GLuint *vbo)
 
 int main(int argc, char** argv)
 {
-	bool loop;
+	bool loop, mouseDown;
 	ccEvent event;
 	ccError error;
 	GLuint program, vao, vbo, tex;
 	GLint imageLocation, mouseLocation;
 
 	loop = true;
+	mouseDown = false;
 
 	if(ccDisplayInitialize()){
 		goto cc_error;
 	}
-	if(ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "A ccore window", 0)){
+	if(ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "OpenGL Falling sand, made with ccore", 0)){
 		goto cc_error;
 	}
 	if(ccGLContextBind(3, 2)){
@@ -139,6 +140,12 @@ int main(int argc, char** argv)
 				case CC_EVENT_WINDOW_QUIT:
 					loop = false;
 					break;
+				case CC_EVENT_MOUSE_DOWN:
+					mouseDown = true;
+					break;
+				case CC_EVENT_MOUSE_UP:
+					mouseDown = false;
+					break;
 				default:
 					break;
 			}
@@ -147,7 +154,11 @@ int main(int argc, char** argv)
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glProgramUniform2f(program, mouseLocation, (float)ccWindowGetMouse().x / 800, (600 - (float)ccWindowGetMouse().y) / 600);
+		if(mouseDown){
+			glProgramUniform2f(program, mouseLocation, (float)ccWindowGetMouse().x / 800, (600 - (float)ccWindowGetMouse().y) / 600);
+		}else{
+			glProgramUniform2f(program, mouseLocation, 0, 0);
+		}
 
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6);

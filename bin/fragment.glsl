@@ -12,7 +12,7 @@ in vec2 texCoord;
 
 void main()
 {
-	if(distance(texCoord, mouse) < 0.005){
+	if(mouse != vec2(0, 0) && distance(texCoord, mouse) < 0.005){
 		color = vec4(1);
 		return;
 	}
@@ -21,12 +21,11 @@ void main()
 
 	if(color == vec4(0, 0, 0, 1)){
 		float top = texture(texUnit, texCoord + vec2(0, screenY)).x;
-
 	}
 
 	float top = texture(texUnit, texCoord + vec2(0, screenY)).x;
 	if(top == 1 && color.r == 0 && color.g == 0){
-		color = vec4(1, 0, 0.99, 1);
+		color = vec4(1, 1, 0.99, 1);
 		return;
 	}
 
