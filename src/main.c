@@ -18,7 +18,7 @@ GLuint loadShader(char *file, GLenum type)
 	GLint status, logLength;
 	ccFileInfo fi;
 
-	fi = ccFileGetInfo(file);
+	fi = ccFileInfoGet(file);
 	if(!fi.size){
 		return 0;
 	}
@@ -55,8 +55,8 @@ GLuint loadProgram()
 {
 	GLuint program, vertex, fragment;
 
-	fragment = loadShader(ccStringConcatenate(2, ccFileGetDataDir(), "fragment.glsl"), GL_FRAGMENT_SHADER);
-	vertex = loadShader(ccStringConcatenate(2, ccFileGetDataDir(), "vertex.glsl"), GL_VERTEX_SHADER);
+	fragment = loadShader(ccStringConcatenate(2, ccFileDataDirGet(), "fragment.glsl"), GL_FRAGMENT_SHADER);
+	vertex = loadShader(ccStringConcatenate(2, ccFileDataDirGet(), "vertex.glsl"), GL_VERTEX_SHADER);
 
 	program = glCreateProgram();
 	glAttachShader(program, vertex);
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 	if(ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "A ccore window", 0)){
 		goto cc_error;
 	}
-	if(ccGLBindContext(3, 2)){
+	if(ccGLContextBind(3, 2)){
 		goto cc_error;
 	}
 
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 
 	program = loadProgram();
 
-	tex = loadTGATexture(ccStringConcatenate(2, ccFileGetDataDir(), "texture.tga"));
+	tex = loadTGATexture(ccStringConcatenate(2, ccFileDataDirGet(), "texture.tga"));
 	imageLocation = glGetUniformLocation(program, "texUnit");
 	mouseLocation = glGetUniformLocation(program, "mouse");
 	glUseProgram(program);
@@ -133,8 +133,8 @@ int main(int argc, char** argv)
 	glProgramUniform1i(program, imageLocation, 0);
 
 	while(loop){
-		while(ccWindowPollEvent()){
-			event = ccWindowGetEvent();
+		while(ccWindowEventPoll()){
+			event = ccWindowEventGet();
 			switch(event.type){
 				case CC_EVENT_WINDOW_QUIT:
 					loop = false;
@@ -155,12 +155,12 @@ int main(int argc, char** argv)
 
 		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 800, 600, 0);
 
-		if(ccGLSwapBuffers()){
+		if(ccGLBuffersSwap()){
 			goto cc_error;
 		}
 	}
 
-	ccFreeAll();
+	ccFree();
 
 	return 0;
 
@@ -169,7 +169,7 @@ cc_error:
 		printf("Error: %s", ccErrorString(error));
 	}
 
-	ccFreeAll();
+	ccFree();
 
 	return -1;
 }
