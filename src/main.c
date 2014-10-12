@@ -1,12 +1,14 @@
 #include <stdio.h>
 
+#include <ccore/file.h>
 #include <ccore/display.h>
 #include <ccore/window.h>
 #include <ccore/opengl.h>
 #include <ccore/event.h>
-#include <ccore/file.h>
 #include <ccore/string.h>
 #include <ccore/error.h>
+
+#include <GL/glew.h>
 
 #include "tga.h"
 
@@ -114,6 +116,8 @@ int main(int argc, char** argv)
 	if(ccGLContextBind(3, 2)){
 		goto cc_error;
 	}
+
+	glewInit();
 
 	printf("OpenGL version: %s\n", glGetString(GL_VERSION));
 	printf("GLSL version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
