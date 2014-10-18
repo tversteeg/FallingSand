@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 	if(ccWindowCreate((ccRect){.x = 0, .y = 0, .width = 800, .height = 600}, "OpenGL Falling sand, made with ccore", 0)){
 		goto cc_error;
 	}
-	if(ccGLContextBind(3, 2)){
+	if(ccGLContextBind()){
 		goto cc_error;
 	}
 
